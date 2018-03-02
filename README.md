@@ -27,5 +27,25 @@ redis :jedispool, jedisOperater (set,get,expire,ttl,hset hmset,del ,keys，zset,
 redis配置及两种ha方案，redisoperator及counter
 公司地址修改的调整后端代码，和对方系统联调
 (redis 3.0.5之前到达maxmemory的值后默认为volitile-lru,3.0.5之后为noeviction[不会删除任何key]再次set会报错)
-zikao,house,car,learn
+-----------------redis client desigin:
+IRedisClient:
+	singleton,sentinel,cluster
+
+builderwarp: 
+	builder(model,redisConfig){基于Model和config构建对应的redisclient}
+
+配置：
+ redis:
+    model:
+    pool:
+    singleton:
+        addr:
+        passwd: 
+    sentinel:
+        addr:
+        passwd:
+     cluster:
+	addr:
+        passwd:
+    
  

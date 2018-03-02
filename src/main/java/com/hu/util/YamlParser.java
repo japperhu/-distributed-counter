@@ -25,6 +25,7 @@ public class YamlParser {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static <T>  T  parseYmlToObject(Class<T> clazz, File file){
         try(
                 FileInputStream fis=new FileInputStream(file)
@@ -55,9 +56,10 @@ public class YamlParser {
      * @param fieldVal 属性字段内容
      * @param sourceBean javaBean
      */
+    @SuppressWarnings("unchecked")
     private static void setFieldToBean(Object fieldVal,String fieldKey,Object sourceBean) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
             if(fieldVal instanceof Map){
-                Map<String,Object> fields=(Map<String,Object>)fieldVal;
+				Map<String,Object> fields=(Map<String,Object>)fieldVal;
                 Field objField=sourceBean.getClass().getDeclaredField(fieldKey);
                 objField.setAccessible(true);
                 Object sourceFieldBean= objField.getType().newInstance();
@@ -66,9 +68,11 @@ public class YamlParser {
                 }
                 objField.set(sourceBean,sourceFieldBean);
             }else{
-               Field field=sourceBean.getClass().getDeclaredField(fieldKey);
-               field.setAccessible(true);
-               field.set(sourceBean,fieldVal);
+            	if(fieldVal!=null){
+	               Field field=sourceBean.getClass().getDeclaredField(fieldKey);
+	               field.setAccessible(true);
+	               field.set(sourceBean,fieldVal);
+            	}
             }
     }
 
