@@ -72,6 +72,7 @@ public class RedisClientBuilder {
 			addressList.add(new HostAndPort(hostAndPortStr[0], Integer.valueOf(hostAndPortStr[1])));
 		}
 		ImmutableSet<HostAndPort> hostAndPorts=ImmutableSet.copyOf(addressList);
+		//redis集群版只使用db0，select命令虽然能够支持select 0。其他的db都会返回错误
 		return new JedisCluster(hostAndPorts,redisConfig.getPool().getConnectionTimeout(),redisConfig.getPool().getSoTimeout(),redisConfig.getCluster().getMaxAttempts(),redisConfig.getPassword(),buildReidPoolConfig(redisConfig));
 	}
 	/**

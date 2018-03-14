@@ -23,10 +23,12 @@ public class RedisClientTest {
 	private static final Logger LOG=LoggerFactory.getLogger(RedisClientTest.class);
 	private static IRedisClient redisClient;
 	
+	private static IRedisClient redisSentinelClient;
 	
 	@BeforeClass
 	public static void init() {
-		redisClient=RedisClientBuilder.buildRedisClient();
+		//redisClient=RedisClientBuilder.buildRedisClient();
+		redisSentinelClient=RedisClientBuilder.buildRedisClient();
 		LOG.info("---redisClient初始化完成");
 	}
 	/********singleton模式test
@@ -52,15 +54,29 @@ public class RedisClientTest {
 		});
 	}
 	
-	/********sentinel模式test*********/
+	/********sentinel模式test
+	 * @throws InterruptedException *********/
 	@Test
-	public void testSentinelNormalOper() {
-		
+	public void testSentinelNormalOper() throws InterruptedException {
+		redisSentinelClient.setex("m", 2, "val-m");
+		assertEquals("val-m",redisSentinelClient.get("m"));
+		Thread.sleep(3000);
+		assertEquals(null,redisSentinelClient.get("m"));
+		redisSentinelClient.lpush("list-a", "1","2","3");
+		assertEquals("3",redisSentinelClient.lindex("list-a",0));
 	}
 	
 	@Test
 	public void testSentinelExecuteOper() {
-		
+		redisSentinelClient.execute(new IRedisExecuteCallback() {
+			@Override
+			public void action(Jedis jedis) {
+				LOG.info("----flush前dbsize为：{}",jedis.dbSize());
+				jedis.flushDB();
+				assertEquals(0L, (long)jedis.dbSize());
+				LOG.info("----flush后dbsize为：{}",jedis.dbSize());
+			}
+		});
 	}
 	/********cluster模式test*********/
 	@Test
@@ -77,8 +93,10 @@ public class RedisClientTest {
 	
 	@AfterClass
 	public static void destory() {
-		redisClient.destory();
-		redisClient=null;
+//		redisClient.destory();
+//		redisClient=null;
+		redisSentinelClient.destory();
+		redisSentinelClient=null;
 		LOG.info("---redisClient 销毁");
 	}
 

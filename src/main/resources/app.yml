@@ -1,9 +1,9 @@
 redis:
-    address: 172.16.8.183:6379
-    dbNum: 0
+    address: 172.16.8.183:26379,172.16.8.183:26380,172.16.8.183:26381 #172.16.8.183:6379
+    dbNum: 0  #only in singleton and sentinel
     password: husixu
     enable: true
-    model: singleton
+    model: sentinel #singleton
     pool:
        maxIdle: 10
        maxTotal: 200
@@ -14,7 +14,7 @@ redis:
        connectionTimeout: 3000
        soTimeout: 3000
     sentinel: 
-       masterName: 
+       masterName: master-sentinel
     cluster:
        maxAttempts:   
            
