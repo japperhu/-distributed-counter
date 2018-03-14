@@ -22,7 +22,8 @@ public class SystemConfigManager {
      * @param <T>
      * @return
      */
-    public  static <T>  T getSystemPropertiesBean(Class<T> clazz){
+    @SuppressWarnings("unchecked")
+	public  static <T>  T getSystemPropertiesBean(Class<T> clazz){
         try {
             if (sysConfigStore.containsKey(clazz.getName())) {
                 return (T) sysConfigStore.get(clazz.getName());
