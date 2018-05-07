@@ -1,5 +1,7 @@
 package com.hu.test.properload.properties;
 
+import com.hu.bo.config.RedisConfig;
+
 import lombok.Data;
 
 /**
@@ -10,7 +12,7 @@ import lombok.Data;
 @Data
 public class AppProperties {
 
-private JedisProperties jedis;
+private RedisConfig redis;
 private String server_port;
 private ZKProperties zookeeper;
 

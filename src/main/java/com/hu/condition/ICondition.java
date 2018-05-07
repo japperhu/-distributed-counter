@@ -5,5 +5,7 @@ package com.hu.condition;
  *
  */
 public class ICondition {
+	
+	
 
 }

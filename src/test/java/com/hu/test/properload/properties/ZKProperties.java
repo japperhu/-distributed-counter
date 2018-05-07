@@ -1,7 +1,6 @@
 package com.hu.test.properload.properties;
 
 import com.hu.annotation.PropertiesPrefix;
-import com.hu.test.properload.properties.field.ZKInfo;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,6 +12,10 @@ import java.io.Serializable;
 @Data
 @PropertiesPrefix("zookeeper")
 public class ZKProperties implements Serializable{
-    private String nodeName;
-    private ZKInfo service;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4268352541385307800L;
+	private int sessionTimeout;
+    private String address;
 }

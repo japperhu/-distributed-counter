@@ -1,12 +1,15 @@
 package com.hu.util;
 
-import com.hu.annotation.PropertiesPrefix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import com.hu.annotation.PropertiesPrefix;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -21,15 +24,13 @@ public class YamlParser {
     /**
      * 将yaml文件内容设置到java bean中
      * @param clazz
-     * @param file
+     * @param fis
      * @param <T>
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T>  T  parseYmlToObject(Class<T> clazz, File file){
-        try(
-                FileInputStream fis=new FileInputStream(file)
-        ){
+    public static <T>  T  parseYmlToObject(Class<T> clazz, InputStream fis){
+        try{
             Yaml yaml=new Yaml();
             if(clazz.isAnnotationPresent(PropertiesPrefix.class)){ //加载指定的配置项到对象中
                 Map<String,Object> properties=(Map<String, Object>) yaml.load(fis);
@@ -44,11 +45,34 @@ public class YamlParser {
             }else{//加载所有字段到对象中
                 return yaml.loadAs(fis,clazz);
             }
-
         }catch (Exception e){
         LOG.error("-------parseYmlToObject error",e);
         return null;
+        }finally {
+        	if(fis!=null) {
+        		try {
+					fis.close();
+				} catch (IOException e) {
+					 LOG.error("-------parseYmlToObject error",e);
+				}
+        	}
         }
+    }
+    /**
+     * 将yaml文件内容设置到java bean中
+     * @param clazz
+     * @param file
+     * @param <T>
+     * @return
+     */
+    public static <T>  T  parseYmlToObject(Class<T> clazz, File file) {
+    		try {
+    		FileInputStream fis=new FileInputStream(file);
+    		return parseYmlToObject(clazz,fis);
+    		}catch (Exception e){
+    	        LOG.error("-------parseYmlToObject error",e);
+    	        return null;
+    	    }
     }
 
     /**
@@ -58,8 +82,9 @@ public class YamlParser {
      */
     @SuppressWarnings("unchecked")
     private static void setFieldToBean(Object fieldVal,String fieldKey,Object sourceBean) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
-            if(fieldVal instanceof Map){
-				Map<String,Object> fields=(Map<String,Object>)fieldVal;
+    		fieldKey=replaceSpecialCharToUpWord(fieldKey,'-','_');
+    	    if(fieldVal instanceof Map){
+                Map<String,Object> fields=(Map<String,Object>)fieldVal;
                 Field objField=sourceBean.getClass().getDeclaredField(fieldKey);
                 objField.setAccessible(true);
                 Object sourceFieldBean= objField.getType().newInstance();
@@ -68,12 +93,26 @@ public class YamlParser {
                 }
                 objField.set(sourceBean,sourceFieldBean);
             }else{
-            	if(fieldVal!=null){
-	               Field field=sourceBean.getClass().getDeclaredField(fieldKey);
-	               field.setAccessible(true);
-	               field.set(sourceBean,fieldVal);
-            	}
+               Field field=sourceBean.getClass().getDeclaredField(fieldKey);
+               field.setAccessible(true);
+               field.set(sourceBean,fieldVal);
             }
+    }
+
+    private static String replaceSpecialCharToUpWord(String fieldKey,char... specialChars){
+        for(char specialChar:specialChars) {
+            fieldKey=replaceSpecialCharToUpWord(fieldKey,specialChar);
+        }
+        return fieldKey;
+    }
+    private static String replaceSpecialCharToUpWord(String fieldKey,char specialChar){
+        StringBuilder sb=new StringBuilder(fieldKey);
+        int index=sb.indexOf(String.valueOf(specialChar));
+        while(index!=-1){
+            sb.replace(index,index+2,String.valueOf(sb.charAt(index+1)).toUpperCase());
+            index=sb.indexOf(String.valueOf(specialChar));
+        }
+        return sb.toString();
     }
 
 }

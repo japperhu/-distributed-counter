@@ -7,6 +7,5 @@ package com.hu;
  *
  */
 public class StartCounter {
-	
 
 }

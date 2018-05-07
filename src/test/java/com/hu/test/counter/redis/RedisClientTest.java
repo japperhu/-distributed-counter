@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hu.counter.Counter;
+import com.hu.counter.redis.RedisCounter;
 import com.hu.util.redis.IRedisClient;
 import com.hu.util.redis.RedisClientBuilder;
 import com.hu.util.redis.callback.IRedisExecuteCallback;
@@ -89,6 +91,15 @@ public class RedisClientTest {
 		
 	}
 	
+	@Test
+	public void testCounter() {
+		Counter counter=new RedisCounter("counter-a");
+		assertEquals(null, counter.get());
+		counter.set(2);
+		assertEquals(2L, counter.get().longValue());
+		counter.increment(1);
+		assertEquals(3L, counter.get().longValue());
+	}
 	
 	
 	@AfterClass

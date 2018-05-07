@@ -10,20 +10,20 @@ public interface Counter {
 	
 	/**
 	 * 自增一定值
-	 * @param num 自增量
+	 * @param incrementNum 自增量
 	 * @return 自增后的结果
 	 */
-	long increment(long num);
+	long increment(long incrementNum);
 	/**
 	 * 设置为一个值
 	 * @param num 设置的值
 	 */
 	void set(long num);
 	/**
-	 * 获得当前计数器的值
+	 * 获得当前计数器的值,不存在将返回null
 	 * @return
 	 */
-	long get();
+	Long get();
 	
 
 }

@@ -1,7 +1,7 @@
 redis:
-    address: 172.16.8.183:26379,172.16.8.183:26380,172.16.8.183:26381 #172.16.8.183:6379
+    address: 10.99.2.117:26379,10.99.2.117:26380,10.99.2.117:26381 #10.99.2.117:6379
     dbNum: 0  #only in singleton and sentinel
-    password: husixu
+    password: redis
     enable: true
     model: sentinel #singleton
     pool:
@@ -16,13 +16,13 @@ redis:
     sentinel: 
        masterName: master-sentinel
     cluster:
-       maxAttempts:   
+       maxAttempts: 10  
            
 server_port: 8080
 
 zookeeper:
-  nodeName: testnode
-  service:
-    timeout: 300
-    url: 192.168.1.41:2181,192.168.1.45:2181,192.168.1.46:2181
-
+  #服务端会在sessionTimeout时间向客户端发送心跳包如果因为一些问题没有响应ack给到服务端，且时间超过了sessionTimeout则表示会话超时了
+  sessionTimeout: 2000
+  address: 10.99.2.117:2181
+  
+   
