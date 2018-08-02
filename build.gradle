@@ -1,6 +1,6 @@
 //gradle plugins
 apply plugin: 'java'
-apply plugin: 'java-library'
+apply plugin: 'eclipse'
 //sourceCompatibility、versionֻ只是java plugin的部分配置，更多可见<a href="https://docs.gradle.org/current/userguide/java_plugin.html">java plugin 45.8</a>
 //project java compile version
 sourceCompatibility = 1.8
@@ -16,6 +16,12 @@ repositories {
     jcenter{
      url  'http://maven.aliyun.com/nexus/content/groups/public/'
     }
+}
+//eclipse插件,下载源码
+eclipse {
+        classpath {
+           downloadSources = true
+        }
 }
 //java gradle plugin dependencies
 dependencies {
@@ -37,7 +43,7 @@ dependencies {
     exclude group: 'log4j'
     }
     compile(
-     'org.apache.zookeeper:zookeeper:3.4.10'
+     'org.apache.zookeeper:zookeeper:3.4.13'
     ){
     exclude group:'org.slf4j'
     exclude group: 'log4j'
