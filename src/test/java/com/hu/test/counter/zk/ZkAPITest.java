@@ -76,7 +76,7 @@ public class ZkAPITest {
 			}
         }, stat);
         System.out.println("getData数据为:"+new String(datas)+",子节点数量:"+stat.getNumChildren()+",版本号:"+stat.getVersion());
-        //修改节点数据
+        //修改节点数据,第三个参数为要修改的值目前的version（乐观锁），该值可避免多线程时直接覆盖
         Stat updateStat=zk.setData(path+"/child1", "dataxx111".getBytes(), -1);
         System.out.println("修改后版本号为："+updateStat.getVersion());
         Thread.sleep(5000);

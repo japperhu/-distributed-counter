@@ -35,4 +35,9 @@ public class RedisCounter implements Counter {
 		return val==null?null:Long.valueOf(val);
 	}
 
+	@Override
+	public long increment() {
+		return redisClient.incr(counterName);
+	}
+
 }
