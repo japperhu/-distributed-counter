@@ -37,17 +37,28 @@ dependencies {
     //compile  group: 'org.apache.zookeeper',name: 'zookeeper',version:'3.4.10',transitive: false
     //这种方式仅仅排查某个依赖
      compile(
-     'com.101tec:zkclient:0.10'
-    ){
-    exclude group:'org.slf4j'
-    exclude group: 'log4j'
-    }
-    compile(
      'org.apache.zookeeper:zookeeper:3.4.13'
     ){
     exclude group:'org.slf4j'
     exclude group: 'log4j'
     }
+    /************curator begin************/
+     compile(
+    'org.apache.curator:curator-client:4.0.1'
+    ){
+    exclude group:'org.apache.zookeeper'
+    }
+    compile(
+    'org.apache.curator:curator-recipes:4.0.1'
+    ){
+    exclude group:'org.apache.zookeeper'
+    }
+    compile(
+    'org.apache.curator:curator-framework:4.0.1'
+    ){
+    exclude group:'org.apache.zookeeper'
+    }
+     /************curator end************/
    
     implementation 'com.google.guava:guava:22.0'
    // compile group :'redis.clients',name:'jedis ',version:'2.8.2'

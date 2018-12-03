@@ -2,6 +2,10 @@ package com.hu.test.counter.redis;
 
 import static org.junit.Assert.*;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -99,6 +103,36 @@ public class RedisClientTest {
 		assertEquals(2L, counter.get().longValue());
 		counter.increment(1);
 		assertEquals(3L, counter.get().longValue());
+	}
+	
+	@Test
+	public void testCounterWithMultiThreads() {
+		Counter counter=new RedisCounter("counter-b");
+		int threads=20;
+		CountDownLatch countDownLatch=new CountDownLatch(threads);
+		ThreadPoolExecutor executor=(ThreadPoolExecutor)Executors.newFixedThreadPool(threads);
+		long begin=System.currentTimeMillis();
+		for(int i=0;i<threads;i++) {
+			Thread thread=new Thread (){
+				@Override
+				public void run() {
+					for(int i=0;i<20000;i++) {
+						counter.increment();
+					}
+					countDownLatch.countDown();
+				}
+			};
+			thread.setName("thread-counter-"+i);
+			executor.submit(thread);
+		}
+		try {
+			countDownLatch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		LOG.info("耗时:{}",System.currentTimeMillis()-begin);
+		LOG.info("counter值:{}",counter.get());
+		assertEquals(counter.get().intValue(), 400000L);
 	}
 	
 	
