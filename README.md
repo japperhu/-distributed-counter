@@ -19,14 +19,16 @@ zookeeper
 serialNum(snowflak,uuid):
 next()
 
------------------redis client desigin:
+#### redis client desigin
+``` yaml
 IRedisClient:
 	singleton,sentinel,cluster
 
 builderwarp: 
 	builder(model,redisConfig){基于Model和config构建对应的redisclient}
-
+```
 #### Config
+``` yaml
  redis:
     model:
     pool:
@@ -39,5 +41,6 @@ builderwarp:
      cluster:
 	addr:
         passwd:
+```
     
  
