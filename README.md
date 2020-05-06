@@ -38,7 +38,7 @@ builderwarp:
     sentinel:
         addr:
         passwd:
-     cluster:
+    cluster:
 	addr:
         passwd:
 ```
